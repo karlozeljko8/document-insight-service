@@ -1,0 +1,108 @@
+
+[
+  {
+    "document": "sample_employee_policy.pdf",
+    "question": "What is the annual learning budget for a full-time employee?",
+    "expected_answer": "EUR 800 per year",
+    "expected_any": ["800"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_employee_policy.pdf",
+    "question": "How much learning budget does a part-time employee receive if they work at least 20 hours per week?",
+    "expected_answer": "EUR 400 per year",
+    "expected_any": ["400"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_employee_policy.pdf",
+    "question": "How far in advance must an employee submit a learning request?",
+    "expected_answer": "At least ten business days before the course begins",
+    "expected_any": ["10 business days", "ten business days"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_employee_policy.pdf",
+    "question": "What is the normal maximum hotel cost per night, excluding taxes?",
+    "expected_answer": "EUR 160 per night",
+    "expected_any": ["160"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_employee_policy.pdf",
+    "question": "What is the name of the company's chief financial officer?",
+    "expected_answer": "The policy does not specify the CFO's name",
+    "expected_any": [],
+    "manual_review": true
+  },
+  {
+    "document": "sample_company_report.pdf",
+    "question": "How many employees did Northstar Office Supplies have in fiscal year 2025?",
+    "expected_answer": "120 employees",
+    "expected_any": ["120"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_company_report.pdf",
+    "question": "What was the company's annual revenue in fiscal year 2025?",
+    "expected_answer": "EUR 2.4 million",
+    "expected_any": ["2.4 million", "2.4m", "2,400,000"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_company_report.pdf",
+    "question": "What was the customer satisfaction score in 2025?",
+    "expected_answer": "92%",
+    "expected_any": ["92%"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_company_report.pdf",
+    "question": "How many office locations did the company operate?",
+    "expected_answer": "Three office locations",
+    "expected_any": ["3", "three"],
+    "manual_review": false
+  },
+  {
+    "document": "sample_company_report.pdf",
+    "question": "Who is the company's chief executive officer?",
+    "expected_answer": "The report does not name the CEO",
+    "expected_any": [],
+    "manual_review": true
+  },
+  {
+  "document": "sample_employee_policy.pdf",
+  "question": "Within how many calendar days must travel expenses be submitted?",
+  "expected_answer": "15 calendar days",
+  "expected_any": ["15 calendar days"],
+  "manual_review": false
+  },
+  {
+  "document": "sample_employee_policy.pdf",
+  "question": "What is the standard equipment budget per employee?",
+  "expected_answer": "EUR 350 per employee",
+  "expected_any": ["350"],
+  "manual_review": false
+  },
+  {
+  "document": "sample_employee_policy.pdf",
+  "question": "Who should employees contact about learning budgets?",
+  "expected_answer": "People Operations",
+  "expected_any": ["People Operations"],
+  "manual_review": false
+  },
+  {
+  "document": "sample_company_report.pdf",
+  "question": "In which city is Northstar Office Supplies headquartered?",
+  "expected_answer": "Manchester",
+  "expected_any": ["Manchester"],
+  "manual_review": false
+  },
+  {
+  "document": "sample_company_report.pdf",
+  "question": "What percentage of active customer accounts belonged to small businesses in 2025?",
+  "expected_answer": "64%",
+  "expected_any": ["64%"],
+  "manual_review": false
+  }
+]
