@@ -7,6 +7,7 @@ import fitz
 import numpy as np
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
+from requests import request
 from sentence_transformers import SentenceTransformer
 from transformers import pipeline
 
@@ -286,18 +287,20 @@ class AskRequest(BaseModel):
 def ask_question(request: AskRequest):
     document = documents.get(request.document_id)
 
-    if document is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found. Upload it again and use its document_id.",
-        )
-
     question = request.question.strip()
 
     if not question:
         raise HTTPException(
             status_code=400,
-            detail="Question cannot be empty.",
+            detail="Question cannot be empty."
+        )
+
+    document_id = request.document_id
+
+    if document_id not in documents:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found."
         )
 
     # Step 1: Retrieve relevant context using FAISS.
