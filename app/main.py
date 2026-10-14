@@ -201,6 +201,10 @@ def extract_pdf_pages(pdf_bytes: bytes) -> list[dict]:
     return pages
 
 
+# ------------------------------------------------------------------------
+# Chunking and indexing
+# ------------------------------------------------------------------------
+
 def split_into_chunks(
     text: str,
     page_number: int,
@@ -232,6 +236,61 @@ def split_into_chunks(
         start = end - CHUNK_OVERLAP_WORDS
 
     return chunks
+
+
+def split_tables_into_chunks(
+    tables_text: str,
+    page_number: int,
+) -> list[dict]:
+    """
+    Build table chunks from the "one sentence per row" text. Each chunk keeps
+    its rows in "rows". Large tables are split into groups of rows that fit
+    CHUNK_WORDS so the embedding model does not truncate them.
+    """
+    chunks = []
+
+    for table_block in tables_text.split("\n\n"):
+        rows = [row.strip() for row in table_block.splitlines() if row.strip()]
+
+        group = []
+        group_words = 0
+
+        for row in rows + [None]:
+            row_words = len(row.split()) if row else 0
+
+            if group and (row is None or group_words + row_words > CHUNK_WORDS):
+                chunks.append(
+                    {
+                        "text": "\n".join(group),
+                        "page": page_number,
+                        "rows": group,
+                    }
+                )
+                group, group_words = [], 0
+
+            if row:
+                group.append(row)
+                group_words += row_words
+
+    return chunks
+
+
+def select_best_row(question: str, rows: list[str]) -> str:
+    """Pick the table row most similar to the question."""
+    if len(rows) == 1:
+        return rows[0]
+
+    model = get_embedding_model()
+
+    embeddings = model.encode(
+        [question] + rows,
+        convert_to_numpy=True,
+        normalize_embeddings=True,
+    )
+
+    scores = embeddings[1:] @ embeddings[0]
+
+    return rows[int(np.argmax(scores))]
 
 
 def create_document_index(chunks: list[dict]):
@@ -294,6 +353,7 @@ def retrieve_chunks(
             {
                 "text": chunk["text"],
                 "page": chunk["page"],
+                "rows": chunk.get("rows"),
                 "similarity": float(similarity),
             }
         )
