@@ -471,14 +471,6 @@ def ask_question(payload: AskRequest):
             detail="Document not found.",
         )
 
-    question = payload.question.strip()
-
-    if not question:
-        raise HTTPException(
-            status_code=400,
-            detail="Question cannot be empty.",
-        )
-
     # Step 1: Retrieve relevant context using FAISS.
     candidates = retrieve_chunks(question, document)
 
