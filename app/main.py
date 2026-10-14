@@ -526,6 +526,7 @@ def ask_question(payload: AskRequest):
         answered,
         key=lambda item: (
             item["qa_confidence"],
+            item["similarity"],
         ),
     )
     return {
@@ -536,6 +537,5 @@ def ask_question(payload: AskRequest):
             "text": best["text"],
         },
         "retrieved_chunks": len(candidates),
-        "answer_method": "faiss_retrieval_and_qa",
         "debug_candidates": evaluated_candidates,
     }
