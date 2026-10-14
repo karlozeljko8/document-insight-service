@@ -454,6 +454,15 @@ class AskRequest(BaseModel):
 
 @app.post("/ask")
 def ask_question(payload: AskRequest):
+    # Validate the request itself first (400), then look up the document (404).
+    question = payload.question.strip()
+
+    if not question:
+        raise HTTPException(
+            status_code=400,
+            detail="Question cannot be empty.",
+        )
+
     document = documents.get(payload.document_id)
 
     if document is None:
