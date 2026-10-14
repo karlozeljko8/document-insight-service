@@ -1,0 +1,242 @@
+[
+  {
+    "question_number": 1,
+    "document": "sample_employee_policy.pdf",
+    "question": "What is the annual learning budget for a full-time employee?",
+    "expected_answer": "EUR 800 per year",
+    "actual_answer": "EUR 800",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Bluehaven Analytics — Employee Policy Version 1.2 | Effective date: 1 March 2026 This fictional policy document was created for API testing. The organization and policy details are invented. Learning and Development Each full-time employee receives an annual learning budget of EUR 800. Part-time employees working at least 20 hours per week receive EUR 400 per year. The budget may be used for approved courses, professional certifications, and work-related books. Approval Process Employees must submit a learning request to their line manager at least ten business days before a course begins. Expenses above EUR 500 also require approval from the department director. Reimbursement claims must include an itemized receipt and proof of attendance. Business Travel Employees should book standard-class rail tickets for journeys under four hours when a practical rail connection is available. Hotel costs should normally remain below EUR 160 per night, excluding taxes. Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven"
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 2,
+    "document": "sample_employee_policy.pdf",
+    "question": "How much learning budget does a part-time employee receive if they work at least 20 hours per week?",
+    "expected_answer": "EUR 400 per year",
+    "actual_answer": "EUR 400 per year",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Bluehaven Analytics — Employee Policy Version 1.2 | Effective date: 1 March 2026 This fictional policy document was created for API testing. The organization and policy details are invented. Learning and Development Each full-time employee receives an annual learning budget of EUR 800. Part-time employees working at least 20 hours per week receive EUR 400 per year. The budget may be used for approved courses, professional certifications, and work-related books. Approval Process Employees must submit a learning request to their line manager at least ten business days before a course begins. Expenses above EUR 500 also require approval from the department director. Reimbursement claims must include an itemized receipt and proof of attendance. Business Travel Employees should book standard-class rail tickets for journeys under four hours when a practical rail connection is available. Hotel costs should normally remain below EUR 160 per night, excluding taxes. Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven"
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 3,
+    "document": "sample_employee_policy.pdf",
+    "question": "How far in advance must an employee submit a learning request?",
+    "expected_answer": "At least ten business days before the course begins",
+    "actual_answer": "at least ten business days",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Bluehaven Analytics — Employee Policy Version 1.2 | Effective date: 1 March 2026 This fictional policy document was created for API testing. The organization and policy details are invented. Learning and Development Each full-time employee receives an annual learning budget of EUR 800. Part-time employees working at least 20 hours per week receive EUR 400 per year. The budget may be used for approved courses, professional certifications, and work-related books. Approval Process Employees must submit a learning request to their line manager at least ten business days before a course begins. Expenses above EUR 500 also require approval from the department director. Reimbursement claims must include an itemized receipt and proof of attendance. Business Travel Employees should book standard-class rail tickets for journeys under four hours when a practical rail connection is available. Hotel costs should normally remain below EUR 160 per night, excluding taxes. Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven"
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 4,
+    "document": "sample_employee_policy.pdf",
+    "question": "What is the normal maximum hotel cost per night, excluding taxes?",
+    "expected_answer": "EUR 160 per night",
+    "actual_answer": "EUR 160",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Bluehaven Analytics — Employee Policy Version 1.2 | Effective date: 1 March 2026 This fictional policy document was created for API testing. The organization and policy details are invented. Learning and Development Each full-time employee receives an annual learning budget of EUR 800. Part-time employees working at least 20 hours per week receive EUR 400 per year. The budget may be used for approved courses, professional certifications, and work-related books. Approval Process Employees must submit a learning request to their line manager at least ten business days before a course begins. Expenses above EUR 500 also require approval from the department director. Reimbursement claims must include an itemized receipt and proof of attendance. Business Travel Employees should book standard-class rail tickets for journeys under four hours when a practical rail connection is available. Hotel costs should normally remain below EUR 160 per night, excluding taxes. Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven"
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 5,
+    "document": "sample_employee_policy.pdf",
+    "question": "What is the name of the company's chief financial officer?",
+    "expected_answer": "The policy does not specify the CFO's name",
+    "actual_answer": "Bluehaven Analytics",
+    "status": "REVIEW",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven business days. Remote Work Equipment Eligible employees may request one monitor and one keyboard for their home workspace. Equipment remains the property of Bluehaven Analytics and must be returned when employment ends. The standard equipment budget is EUR 350 per employee. Contacts Questions about learning budgets should be sent to People Operations. Travel and reimbursement questions should be sent to Finance. This policy does not specify the name of a chief financial officer."
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": null
+  },
+  {
+    "question_number": 6,
+    "document": "sample_company_report.pdf",
+    "question": "How many employees did Northstar Office Supplies have in fiscal year 2025?",
+    "expected_answer": "120 employees",
+    "actual_answer": "120",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_company_report.pdf",
+      "page": 1,
+      "text": "Northstar Office Supplies — Company Report Reporting period: Fiscal year 2025 This fictional report was created for testing the Document Insight Service. All figures and names are invented. Company Overview Northstar Office Supplies is a fictional supplier of stationery, office furniture, and workplace equipment to small and medium-sized businesses. The company was founded in 2018 and is headquartered in Manchester, United Kingdom. Key Facts Metric Fiscal year 2025 Employees 120 Annual revenue EUR 2.4 million Office locations 3 Customers served 1,850 Customer satisfaction score 92% Operations The company operates three offices: Manchester, Leeds, and Birmingham. Small businesses accounted for 64% of active customer accounts in 2025. Leadership The report does not name the company's chief executive officer. The management team reviewed the annual operating plan in January 2026. Product and Service Priorities For 2026, Northstar plans to improve delivery tracking, expand its recycled-paper product range, and reduce average order processing time from two business days to one business day."
+    },
+    "retrieved_chunks": 1,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 7,
+    "document": "sample_company_report.pdf",
+    "question": "What was the company's annual revenue in fiscal year 2025?",
+    "expected_answer": "EUR 2.4 million",
+    "actual_answer": "EUR 2.4 million",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_company_report.pdf",
+      "page": 1,
+      "text": "Northstar Office Supplies — Company Report Reporting period: Fiscal year 2025 This fictional report was created for testing the Document Insight Service. All figures and names are invented. Company Overview Northstar Office Supplies is a fictional supplier of stationery, office furniture, and workplace equipment to small and medium-sized businesses. The company was founded in 2018 and is headquartered in Manchester, United Kingdom. Key Facts Metric Fiscal year 2025 Employees 120 Annual revenue EUR 2.4 million Office locations 3 Customers served 1,850 Customer satisfaction score 92% Operations The company operates three offices: Manchester, Leeds, and Birmingham. Small businesses accounted for 64% of active customer accounts in 2025. Leadership The report does not name the company's chief executive officer. The management team reviewed the annual operating plan in January 2026. Product and Service Priorities For 2026, Northstar plans to improve delivery tracking, expand its recycled-paper product range, and reduce average order processing time from two business days to one business day."
+    },
+    "retrieved_chunks": 1,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 8,
+    "document": "sample_company_report.pdf",
+    "question": "What was the customer satisfaction score in 2025?",
+    "expected_answer": "92%",
+    "actual_answer": "92%",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_company_report.pdf",
+      "page": 1,
+      "text": "Northstar Office Supplies — Company Report Reporting period: Fiscal year 2025 This fictional report was created for testing the Document Insight Service. All figures and names are invented. Company Overview Northstar Office Supplies is a fictional supplier of stationery, office furniture, and workplace equipment to small and medium-sized businesses. The company was founded in 2018 and is headquartered in Manchester, United Kingdom. Key Facts Metric Fiscal year 2025 Employees 120 Annual revenue EUR 2.4 million Office locations 3 Customers served 1,850 Customer satisfaction score 92% Operations The company operates three offices: Manchester, Leeds, and Birmingham. Small businesses accounted for 64% of active customer accounts in 2025. Leadership The report does not name the company's chief executive officer. The management team reviewed the annual operating plan in January 2026. Product and Service Priorities For 2026, Northstar plans to improve delivery tracking, expand its recycled-paper product range, and reduce average order processing time from two business days to one business day."
+    },
+    "retrieved_chunks": 1,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 9,
+    "document": "sample_company_report.pdf",
+    "question": "How many office locations did the company operate?",
+    "expected_answer": "Three office locations",
+    "actual_answer": "3",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_company_report.pdf",
+      "page": 1,
+      "text": "Northstar Office Supplies — Company Report Reporting period: Fiscal year 2025 This fictional report was created for testing the Document Insight Service. All figures and names are invented. Company Overview Northstar Office Supplies is a fictional supplier of stationery, office furniture, and workplace equipment to small and medium-sized businesses. The company was founded in 2018 and is headquartered in Manchester, United Kingdom. Key Facts Metric Fiscal year 2025 Employees 120 Annual revenue EUR 2.4 million Office locations 3 Customers served 1,850 Customer satisfaction score 92% Operations The company operates three offices: Manchester, Leeds, and Birmingham. Small businesses accounted for 64% of active customer accounts in 2025. Leadership The report does not name the company's chief executive officer. The management team reviewed the annual operating plan in January 2026. Product and Service Priorities For 2026, Northstar plans to improve delivery tracking, expand its recycled-paper product range, and reduce average order processing time from two business days to one business day."
+    },
+    "retrieved_chunks": 1,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 10,
+    "document": "sample_company_report.pdf",
+    "question": "Who is the company's chief executive officer?",
+    "expected_answer": "The report does not name the CEO",
+    "actual_answer": "The report does not name the company's chief executive officer",
+    "status": "REVIEW",
+    "source": {
+      "filename": "sample_company_report.pdf",
+      "page": 1,
+      "text": "Northstar Office Supplies — Company Report Reporting period: Fiscal year 2025 This fictional report was created for testing the Document Insight Service. All figures and names are invented. Company Overview Northstar Office Supplies is a fictional supplier of stationery, office furniture, and workplace equipment to small and medium-sized businesses. The company was founded in 2018 and is headquartered in Manchester, United Kingdom. Key Facts Metric Fiscal year 2025 Employees 120 Annual revenue EUR 2.4 million Office locations 3 Customers served 1,850 Customer satisfaction score 92% Operations The company operates three offices: Manchester, Leeds, and Birmingham. Small businesses accounted for 64% of active customer accounts in 2025. Leadership The report does not name the company's chief executive officer. The management team reviewed the annual operating plan in January 2026. Product and Service Priorities For 2026, Northstar plans to improve delivery tracking, expand its recycled-paper product range, and reduce average order processing time from two business days to one business day."
+    },
+    "retrieved_chunks": 1,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": null
+  },
+  {
+    "question_number": 11,
+    "document": "sample_employee_policy.pdf",
+    "question": "Within how many calendar days must travel expenses be submitted?",
+    "expected_answer": "15 calendar days",
+    "actual_answer": "15",
+    "status": "FAIL",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven business days. Remote Work Equipment Eligible employees may request one monitor and one keyboard for their home workspace. Equipment remains the property of Bluehaven Analytics and must be returned when employment ends. The standard equipment budget is EUR 350 per employee. Contacts Questions about learning budgets should be sent to People Operations. Travel and reimbursement questions should be sent to Finance. This policy does not specify the name of a chief financial officer."
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": false
+  },
+  {
+    "question_number": 12,
+    "document": "sample_employee_policy.pdf",
+    "question": "What is the standard equipment budget per employee?",
+    "expected_answer": "EUR 350 per employee",
+    "actual_answer": "EUR 350",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven business days. Remote Work Equipment Eligible employees may request one monitor and one keyboard for their home workspace. Equipment remains the property of Bluehaven Analytics and must be returned when employment ends. The standard equipment budget is EUR 350 per employee. Contacts Questions about learning budgets should be sent to People Operations. Travel and reimbursement questions should be sent to Finance. This policy does not specify the name of a chief financial officer."
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 13,
+    "document": "sample_employee_policy.pdf",
+    "question": "Who should employees contact about learning budgets?",
+    "expected_answer": "People Operations",
+    "actual_answer": "their line manager",
+    "status": "FAIL",
+    "source": {
+      "filename": "sample_employee_policy.pdf",
+      "page": 1,
+      "text": "Bluehaven Analytics — Employee Policy Version 1.2 | Effective date: 1 March 2026 This fictional policy document was created for API testing. The organization and policy details are invented. Learning and Development Each full-time employee receives an annual learning budget of EUR 800. Part-time employees working at least 20 hours per week receive EUR 400 per year. The budget may be used for approved courses, professional certifications, and work-related books. Approval Process Employees must submit a learning request to their line manager at least ten business days before a course begins. Expenses above EUR 500 also require approval from the department director. Reimbursement claims must include an itemized receipt and proof of attendance. Business Travel Employees should book standard-class rail tickets for journeys under four hours when a practical rail connection is available. Hotel costs should normally remain below EUR 160 per night, excluding taxes. Exceptions require written approval from the department director before booking. Expense Submission Travel expenses must be submitted within 15 calendar days after the trip ends. The finance team aims to process complete claims within seven"
+    },
+    "retrieved_chunks": 2,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": false
+  },
+  {
+    "question_number": 14,
+    "document": "sample_company_report.pdf",
+    "question": "In which city is Northstar Office Supplies headquartered?",
+    "expected_answer": "Manchester",
+    "actual_answer": "Manchester",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_company_report.pdf",
+      "page": 1,
+      "text": "Northstar Office Supplies — Company Report Reporting period: Fiscal year 2025 This fictional report was created for testing the Document Insight Service. All figures and names are invented. Company Overview Northstar Office Supplies is a fictional supplier of stationery, office furniture, and workplace equipment to small and medium-sized businesses. The company was founded in 2018 and is headquartered in Manchester, United Kingdom. Key Facts Metric Fiscal year 2025 Employees 120 Annual revenue EUR 2.4 million Office locations 3 Customers served 1,850 Customer satisfaction score 92% Operations The company operates three offices: Manchester, Leeds, and Birmingham. Small businesses accounted for 64% of active customer accounts in 2025. Leadership The report does not name the company's chief executive officer. The management team reviewed the annual operating plan in January 2026. Product and Service Priorities For 2026, Northstar plans to improve delivery tracking, expand its recycled-paper product range, and reduce average order processing time from two business days to one business day."
+    },
+    "retrieved_chunks": 1,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  },
+  {
+    "question_number": 15,
+    "document": "sample_company_report.pdf",
+    "question": "What percentage of active customer accounts belonged to small businesses in 2025?",
+    "expected_answer": "64%",
+    "actual_answer": "64%",
+    "status": "PASS",
+    "source": {
+      "filename": "sample_company_report.pdf",
+      "page": 1,
+      "text": "Northstar Office Supplies — Company Report Reporting period: Fiscal year 2025 This fictional report was created for testing the Document Insight Service. All figures and names are invented. Company Overview Northstar Office Supplies is a fictional supplier of stationery, office furniture, and workplace equipment to small and medium-sized businesses. The company was founded in 2018 and is headquartered in Manchester, United Kingdom. Key Facts Metric Fiscal year 2025 Employees 120 Annual revenue EUR 2.4 million Office locations 3 Customers served 1,850 Customer satisfaction score 92% Operations The company operates three offices: Manchester, Leeds, and Birmingham. Small businesses accounted for 64% of active customer accounts in 2025. Leadership The report does not name the company's chief executive officer. The management team reviewed the annual operating plan in January 2026. Product and Service Priorities For 2026, Northstar plans to improve delivery tracking, expand its recycled-paper product range, and reduce average order processing time from two business days to one business day."
+    },
+    "retrieved_chunks": 1,
+    "answer_method": "faiss_retrieval_and_qa",
+    "expected_fact_matched": true
+  }
+]

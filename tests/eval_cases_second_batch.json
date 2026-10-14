@@ -1,0 +1,376 @@
+[
+  {
+    "document": "invoice_brightwave_cloud.pdf",
+    "question": "What is the invoice number?",
+    "expected_answer": "INV-2026-0847",
+    "expected_any": [
+      "INV-2026-0847"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "invoice_brightwave_cloud.pdf",
+    "question": "What is the total amount due on the invoice?",
+    "expected_answer": "EUR 6,690.18",
+    "expected_any": [
+      "6,690.18",
+      "6690.18"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "invoice_brightwave_cloud.pdf",
+    "question": "What is the payment due date?",
+    "expected_answer": "30 October 2026",
+    "expected_any": [
+      "30 October 2026",
+      "2026-10-30",
+      "30/10/2026"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "invoice_brightwave_cloud.pdf",
+    "question": "What VAT rate is applied?",
+    "expected_answer": "19%",
+    "expected_any": [
+      "19%"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "invoice_brightwave_cloud.pdf",
+    "question": "How many additional user licences were billed?",
+    "expected_answer": "25",
+    "expected_any": [
+      "25"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "invoice_brightwave_cloud.pdf",
+    "question": "What interest is charged on late payments?",
+    "expected_answer": "1.5% per month",
+    "expected_any": [
+      "1.5%"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "invoice_brightwave_cloud.pdf",
+    "question": "What is the vendor's VAT identification number?",
+    "expected_answer": "The invoice does not state the vendor's VAT number",
+    "expected_any": [],
+    "manual_review": true
+  },
+  {
+    "document": "receipt_greenleaf_cafe.pdf",
+    "question": "What was the total amount paid?",
+    "expected_answer": "EUR 43.96",
+    "expected_any": [
+      "43.96"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "receipt_greenleaf_cafe.pdf",
+    "question": "Who served the table?",
+    "expected_answer": "Marta",
+    "expected_any": [
+      "Marta"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "receipt_greenleaf_cafe.pdf",
+    "question": "How many flat whites were ordered?",
+    "expected_answer": "2",
+    "expected_any": [
+      "2",
+      "two"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "receipt_greenleaf_cafe.pdf",
+    "question": "In which city is the cafe located?",
+    "expected_answer": "Lisbon",
+    "expected_any": [
+      "Lisbon"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "rental_agreement_bristol.pdf",
+    "question": "What is the monthly rent?",
+    "expected_answer": "GBP 1,350",
+    "expected_any": [
+      "1,350",
+      "1350"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "rental_agreement_bristol.pdf",
+    "question": "What is the security deposit?",
+    "expected_answer": "GBP 1,550",
+    "expected_any": [
+      "1,550",
+      "1550"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "rental_agreement_bristol.pdf",
+    "question": "Which utility does the Landlord pay?",
+    "expected_answer": "Water",
+    "expected_any": [
+      "water"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "rental_agreement_bristol.pdf",
+    "question": "How much notice is required to end the tenancy after the fixed term?",
+    "expected_answer": "Two months",
+    "expected_any": [
+      "two months",
+      "2 months"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "mutual_nda_helix_orbital.pdf",
+    "question": "What is the effective date of the NDA?",
+    "expected_answer": "15 September 2026",
+    "expected_any": [
+      "15 September 2026"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "mutual_nda_helix_orbital.pdf",
+    "question": "How long does the agreement remain in effect?",
+    "expected_answer": "Three years from the Effective Date",
+    "expected_any": [
+      "three",
+      "3 years",
+      "3)"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "mutual_nda_helix_orbital.pdf",
+    "question": "Which law governs the agreement?",
+    "expected_answer": "Laws of the State of Delaware, USA",
+    "expected_any": [
+      "Delaware"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "mutual_nda_helix_orbital.pdf",
+    "question": "Within how many days must confidential materials be returned or destroyed after a written request?",
+    "expected_answer": "30 days",
+    "expected_any": [
+      "30"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "mutual_nda_helix_orbital.pdf",
+    "question": "How long do trade secret obligations survive after termination?",
+    "expected_answer": "Five years",
+    "expected_any": [
+      "five",
+      "5 years",
+      "5)"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "datasheet_aurora_x14.pdf",
+    "question": "What is the display refresh rate?",
+    "expected_answer": "120 Hz",
+    "expected_any": [
+      "120"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "datasheet_aurora_x14.pdf",
+    "question": "How much memory does the Aurora X14 have?",
+    "expected_answer": "32 GB LPDDR5X",
+    "expected_any": [
+      "32"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "datasheet_aurora_x14.pdf",
+    "question": "What is the battery capacity?",
+    "expected_answer": "72 Wh",
+    "expected_any": [
+      "72"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "datasheet_aurora_x14.pdf",
+    "question": "How much does the laptop weigh?",
+    "expected_answer": "1.29 kg",
+    "expected_any": [
+      "1.29"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "datasheet_aurora_x14.pdf",
+    "question": "What is the warranty period?",
+    "expected_answer": "24 months",
+    "expected_any": [
+      "24"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "datasheet_aurora_x14.pdf",
+    "question": "What is the recommended price?",
+    "expected_answer": "EUR 1,799",
+    "expected_any": [
+      "1,799",
+      "1799"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "meeting_minutes_project_phoenix.pdf",
+    "question": "What is the new go-live date?",
+    "expected_answer": "7 December 2026",
+    "expected_any": [
+      "7 December 2026"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "meeting_minutes_project_phoenix.pdf",
+    "question": "Who chaired the meeting?",
+    "expected_answer": "Priya Nair",
+    "expected_any": [
+      "Priya Nair"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "meeting_minutes_project_phoenix.pdf",
+    "question": "How much additional budget was approved?",
+    "expected_answer": "EUR 85,000",
+    "expected_any": [
+      "85,000",
+      "85000"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "meeting_minutes_project_phoenix.pdf",
+    "question": "What is the total project budget after the increase?",
+    "expected_answer": "EUR 1,185,000",
+    "expected_any": [
+      "1,185,000"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "meeting_minutes_project_phoenix.pdf",
+    "question": "When is the next meeting?",
+    "expected_answer": "22 October 2026, 10:00",
+    "expected_any": [
+      "22 October 2026"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "bank_statement_sept_2026.pdf",
+    "question": "What is the closing balance?",
+    "expected_answer": "EUR 4,172.74",
+    "expected_any": [
+      "4,172.74"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "bank_statement_sept_2026.pdf",
+    "question": "What was the opening balance?",
+    "expected_answer": "EUR 3,240.50",
+    "expected_any": [
+      "3,240.50"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "bank_statement_sept_2026.pdf",
+    "question": "What are the total debits for the period?",
+    "expected_answer": "EUR 1,947.75",
+    "expected_any": [
+      "1,947.75"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "bank_statement_sept_2026.pdf",
+    "question": "On what date was the online store refund received?",
+    "expected_answer": "12 September",
+    "expected_any": [
+      "12 Sep"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "incident_report_payment_api.pdf",
+    "question": "What was the root cause of the outage?",
+    "expected_answer": "An expired TLS certificate on the internal API gateway",
+    "expected_any": [
+      "certificate"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "incident_report_payment_api.pdf",
+    "question": "How long did the outage last?",
+    "expected_answer": "1 hour 42 minutes",
+    "expected_any": [
+      "1 hour 42",
+      "102 minutes",
+      "1h 42"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "incident_report_payment_api.pdf",
+    "question": "What was the incident severity?",
+    "expected_answer": "SEV-1",
+    "expected_any": [
+      "SEV-1"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "incident_report_payment_api.pdf",
+    "question": "Approximately how many transactions failed?",
+    "expected_answer": "About 12,400",
+    "expected_any": [
+      "12,400",
+      "12400"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "incident_report_payment_api.pdf",
+    "question": "At what time (UTC) was the on-call engineer paged?",
+    "expected_answer": "14:12",
+    "expected_any": [
+      "14:12"
+    ],
+    "manual_review": false
+  }
+]

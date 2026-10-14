@@ -1,0 +1,160 @@
+[
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "In which city is Solaris Grid Energy headquartered?",
+    "expected_answer": "Aarhus, Denmark",
+    "expected_any": [
+      "Aarhus"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "Who is the Chief Financial Officer of Solaris Grid Energy?",
+    "expected_answer": "Marcus Heller",
+    "expected_any": [
+      "Marcus Heller"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "What was the group revenue in 2025?",
+    "expected_answer": "EUR 1.84 billion",
+    "expected_any": [
+      "1.84 billion",
+      "1,840"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "What is the capacity of the Nordhavn Offshore Wind Farm?",
+    "expected_answer": "640 MW",
+    "expected_any": [
+      "640 MW",
+      "640"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "What was the lost-time injury frequency rate in 2025?",
+    "expected_answer": "0.62 per million hours worked",
+    "expected_any": [
+      "0.62"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "What share of expected 2026 output had been hedged at year-end?",
+    "expected_answer": "72%",
+    "expected_any": [
+      "72%"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "How many employees does the group have in Germany?",
+    "expected_answer": "980",
+    "expected_any": [
+      "980"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "annual_report_solaris_grid_2025.pdf",
+    "question": "By how many EUR million did group revenue increase between 2024 and 2025?",
+    "expected_answer": "EUR 220 million (1,840 minus 1,620)",
+    "expected_any": [
+      "220"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "What is the length of the Initial Term of the agreement?",
+    "expected_answer": "36 months",
+    "expected_any": [
+      "36 months",
+      "36"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "What is the annual subscription fee?",
+    "expected_answer": "GBP 480,000",
+    "expected_any": [
+      "480,000",
+      "480000"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "What is the hourly rate for additional services?",
+    "expected_answer": "GBP 165 per hour",
+    "expected_any": [
+      "165"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "What Service Credit applies if monthly availability is 97.3%?",
+    "expected_answer": "15%",
+    "expected_any": [
+      "15%"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "What is the response time for a Priority 1 incident?",
+    "expected_answer": "30 minutes",
+    "expected_any": [
+      "30 minutes"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "Within how many hours must the Provider notify the Customer of a personal data breach?",
+    "expected_answer": "48 hours",
+    "expected_any": [
+      "48"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "What is each party's annual liability cap?",
+    "expected_answer": "125% of the Fees paid or payable in the preceding 12 months",
+    "expected_any": [
+      "125%"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "Which law governs the agreement?",
+    "expected_answer": "The laws of England and Wales",
+    "expected_any": [
+      "England and Wales"
+    ],
+    "manual_review": false
+  },
+  {
+    "document": "master_services_agreement_tallis_corvane.pdf",
+    "question": "What is the total of subscription fees over the Initial Term plus the implementation fee?",
+    "expected_answer": "GBP 1,560,000 (3 x 480,000 + 120,000)",
+    "expected_any": [
+      "1,560,000",
+      "1560000"
+    ],
+    "manual_review": false
+  }
+]
