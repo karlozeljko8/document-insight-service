@@ -455,23 +455,21 @@ class AskRequest(BaseModel):
 
 
 @app.post("/ask")
-def ask_question(request: AskRequest):
-    document = documents.get(request.document_id)
+def ask_question(payload: AskRequest):
+    document = documents.get(payload.document_id)
 
-    question = request.question.strip()
+    if document is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found.",
+        )
+
+    question = payload.question.strip()
 
     if not question:
         raise HTTPException(
             status_code=400,
-            detail="Question cannot be empty."
-        )
-
-    document_id = request.document_id
-
-    if document_id not in documents:
-        raise HTTPException(
-            status_code=404,
-            detail="Document not found."
+            detail="Question cannot be empty.",
         )
 
     # Step 1: Retrieve relevant context using FAISS.
@@ -491,9 +489,16 @@ def ask_question(request: AskRequest):
     evaluated_candidates = []
 
     for candidate in candidates:
+        # For table chunks, run QA on the best-matching row only.
+        # "text" is replaced by that row; the full table stays in "table_text".
+        if candidate.get("rows"):
+            candidate["table_text"] = candidate["text"]
+            candidate["text"] = select_best_row(question, candidate["rows"])
+
         result = qa(
             question=question,
             context=candidate["text"],
+            max_answer_len=MAX_ANSWER_LEN,
         )
 
         evaluated_candidates.append(
@@ -504,20 +509,22 @@ def ask_question(request: AskRequest):
             }
         )
 
-    # Rank primarily by retrieval relevance.
-    # QA confidence is retained for inspection, not added
-    # directly to the FAISS similarity score.
-    evaluated_candidates.sort(
-        key=lambda item: item["similarity"],
-        reverse=True,
-    )
+    answered = [item for item in evaluated_candidates if item["answer"]]
 
-    # Among candidates with strong retrieval relevance,
-    # prefer the answer with the highest QA confidence.
+    if not answered:
+        return {
+            "answer": "I could not find relevant text in this document.",
+            "source": None,
+            "retrieved_chunks": len(candidates),
+            "answer_method": "faiss_retrieval_and_qa",
+            "debug_candidates": evaluated_candidates,
+        }
+
+    # Prefer the answer with the highest QA confidence,
+    # using retrieval similarity as a tie-breaker.
     best = max(
-        evaluated_candidates,
+        answered,
         key=lambda item: (
-            item["similarity"],
             item["qa_confidence"],
         ),
     )
