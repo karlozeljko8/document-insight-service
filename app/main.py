@@ -361,6 +361,10 @@ def retrieve_chunks(
     return results
 
 
+# ------------------------------------------------------------------------
+# API
+# ------------------------------------------------------------------------
+
 @app.get("/")
 def root():
     return {
@@ -396,11 +400,15 @@ async def upload_document(file: UploadFile = File(...)):
     chunks = []
 
     for page in pages:
+        # Body text and table text are chunked separately, so table rows
+        # are never blended into surrounding prose.
+        chunks.extend(split_into_chunks(page["text"], page["page"]))
+
+        # Table chunks keep their rows. The whole table is indexed as ONE chunk
+        # (so retrieval and ranking behave like normal text), but at question
+        # time only the best-matching row is passed to the QA model.
         chunks.extend(
-            split_into_chunks(
-                page["text"],
-                page["page"],
-            )
+            split_tables_into_chunks(page["tables_text"], page["page"])
         )
 
     if not chunks:
