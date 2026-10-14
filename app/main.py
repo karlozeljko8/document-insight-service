@@ -52,7 +52,6 @@ def get_qa_model():
         #     model="distilbert/distilbert-base-cased-distilled-squad",
         # )
 
-        # New QA model:
         qa_model = pipeline(
             "question-answering",
             model="deepset/roberta-base-squad2",
