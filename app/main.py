@@ -7,7 +7,6 @@ import fitz
 import numpy as np
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
-from requests import request
 from sentence_transformers import SentenceTransformer
 from transformers import pipeline
 
