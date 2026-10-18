@@ -6,3 +6,5 @@ transformers==4.57.6
 torch
 pytest
 httpx
+streamlit
+requests
