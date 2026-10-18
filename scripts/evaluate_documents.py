@@ -11,7 +11,7 @@ from app import main
 
 
 ROOT = Path(__file__).resolve().parent.parent
-CASES_PATH = ROOT / "tests" / "evaluation_cases.json"
+CASES_PATH = ROOT / "tests" / "eval_cases_third_batch.json"
 DOCS_PATH = ROOT / "sample_docs"
 RESULTS_PATH = ROOT / "evaluation_results.json"
 
