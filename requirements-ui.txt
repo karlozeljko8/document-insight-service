@@ -1,0 +1,3 @@
+# Dependencies of the Streamlit frontend.
+streamlit==1.66.0
+requests==2.34.2

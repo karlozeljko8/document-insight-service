@@ -5,7 +5,7 @@ pomoću RAG pristupa: semantičko pretraživanje (FAISS) + model za question ans
 Uz API dolazi i Streamlit UI.
 
 > **Status projekta:** PDF obrada, RAG, sesije s više dokumenata i UI su gotovi.
-> Još nije napravljeno: Docker, podrška za slike/OCR, cache embeddinga. Vidi [Ograničenja i plan](#ograničenja-i-plan).
+> Još nije napravljeno: podrška za slike/OCR, cache embeddinga. Vidi [Ograničenja i plan](#ograničenja-i-plan).
 
 ## Što servis radi
 
@@ -69,10 +69,10 @@ Potreban je Python 3.13 (isti kao u CI-ju). Iz mape projekta:
 
 ```powershell
 python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe -m pip install -r requirements-dev.txt -r requirements-ui.txt
 ```
 
-(Linux/macOS: `source .venv/bin/activate`, pa `pip install -r requirements.txt`.)
+(Linux/macOS: `source .venv/bin/activate`, pa `pip install -r requirements-dev.txt -r requirements-ui.txt`.)
 
 Prvo pokretanje skida modele s Hugging Facea (par stotina MB) pa treba internet.
 
@@ -102,7 +102,27 @@ vidjeti izvor odgovora (datoteka i stranica) te obrisati sesiju.
 
 ### Docker
 
-Još nije dodan (vidi plan niže).
+Potreban je samo Docker Desktop (Python i biblioteke nisu potrebni). Iz mape projekta:
+
+```bash
+docker compose up --build
+```
+
+- API: http://localhost:8000/docs
+- UI: http://localhost:8501
+
+Prvi build traje nekoliko minuta jer instalira CPU verziju torch-a i ugrađuje Hugging Face modele u image
+(zato prvi `/ask` nije spor i kontejner radi bez interneta). Sljedeći buildovi koriste cache slojeva, pa promjena koda
+traje sekunde. Nakon `git pull` uvijek pokreni s `--build`, inače se koristi stari image.
+
+Razvoj bez ponovnog builda (kod se montira u kontejner, uvicorn radi s `--reload`):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
+Zavisnosti su podijeljene: `requirements.txt` (backend), `requirements-ui.txt` (Streamlit), `requirements-dev.txt` (backend + testovi).
+Za ručnu instalaciju s testovima koristi `pip install -r requirements-dev.txt` i `pip install -r requirements-ui.txt`.
 
 ## Primjeri API zahtjeva
 
@@ -188,7 +208,6 @@ Kodovi grešaka: 400 neispravan zahtjev (prazno pitanje, krivi tip datoteke, pra
 ## Ograničenja i plan
 
 - Podržani su samo PDF-ovi s tekstualnim slojem. **Slike i skenirani PDF-ovi (OCR) još nisu podržani**; planiran je EasyOCR.
-- **Nema Dockera** (Dockerfile i docker-compose su sljedeći korak).
 - Dokumenti i sesije žive u **memoriji** procesa: restart backenda ih briše.
 - Nema autentikacije ni ograničenja broja zahtjeva; nema strukturiranog logiranja.
 - Embeddingi se ne spremaju u cache; isti PDF uploadan dvaput gradi se dvaput.
