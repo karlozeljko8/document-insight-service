@@ -6,7 +6,12 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 from app.chunking import split_into_chunks, split_tables_into_chunks
 from app.config import MAX_ANSWER_LEN, MAX_FILE_SIZE, MAX_FILES_PER_UPLOAD
-from app.pdf_processor import extract_pdf_pages
+from app.files import (
+    detect_file_type,
+    extension_type,
+    sanitize_filename,
+)
+from app.pdf_processor import extract_image_pages, extract_pdf_pages
 from app.qa import get_qa_model
 from app.retrieval import (
     create_document_index,
@@ -18,7 +23,7 @@ from app.state import add_document, documents, remove_session, sessions
 
 app = FastAPI(
     title="Document Insight Service",
-    description="Upload PDF documents and ask questions about their contents.",
+    description="Upload PDF or image documents and ask questions about their contents.",
     version="0.5.0",
 )
 
@@ -31,31 +36,45 @@ def root():
     }
 
 
-def ingest_pdf(filename: str, pdf_bytes: bytes) -> dict:
-    """Validate, extract, chunk and index one PDF.
+def ingest_document(filename: str, data: bytes) -> dict:
+    """Validate, extract, chunk and index one PDF or image.
 
+    Images and scanned PDF pages are read with OCR.
     Returns a document record. The caller attaches it to a session.
     Raises HTTPException when the file cannot be used.
     """
-    if not filename or not filename.lower().endswith(".pdf"):
+    if not filename or extension_type(filename) is None:
         raise HTTPException(
             status_code=400,
-            detail="Only PDF files are supported.",
+            detail="Only PDF, PNG and JPG files are supported.",
         )
 
-    if not pdf_bytes:
+    if not data:
         raise HTTPException(
             status_code=400,
             detail="The uploaded file is empty.",
         )
 
-    if len(pdf_bytes) > MAX_FILE_SIZE:
+    if len(data) > MAX_FILE_SIZE:
         raise HTTPException(
             status_code=413,
             detail=f"The maximum file size is {MAX_FILE_SIZE // (1024 * 1024)} MB.",
         )
 
-    pages = extract_pdf_pages(pdf_bytes)
+    # The content must match what the extension claims (magic bytes).
+    file_type = detect_file_type(data)
+
+    if file_type is None or file_type != extension_type(filename):
+        raise HTTPException(
+            status_code=400,
+            detail="The file content does not match its extension "
+            "(expected a real PDF, PNG or JPEG file).",
+        )
+
+    if file_type == "pdf":
+        pages = extract_pdf_pages(data)
+    else:
+        pages = extract_image_pages(data)
 
     chunks = []
 
@@ -92,7 +111,7 @@ async def upload_documents(
     file: UploadFile | None = File(default=None),  # legacy single-file field
     session_id: str | None = Form(default=None),
 ):
-    """Upload one or more PDFs.
+    """Upload one or more PDF or image (PNG/JPG) files.
 
     Documents are grouped in a session. Omit session_id to start a new
     session, or pass an existing one to add documents to it.
@@ -118,14 +137,15 @@ async def upload_documents(
     errors = []
 
     for upload in uploads:
-        pdf_bytes = await upload.read()
+        file_bytes = await upload.read()
+        safe_name = sanitize_filename(upload.filename)
 
         try:
-            uploaded.append(ingest_pdf(upload.filename, pdf_bytes))
+            uploaded.append(ingest_document(safe_name, file_bytes))
         except HTTPException as exc:
             errors.append(
                 {
-                    "filename": upload.filename,
+                    "filename": safe_name,
                     "status_code": exc.status_code,
                     "detail": exc.detail,
                 }
@@ -150,6 +170,7 @@ async def upload_documents(
             "filename": record["filename"],
             "pages_processed": len(record["pages"]),
             "chunks_created": len(record["chunks"]),
+            "ocr_pages": sum(1 for page in record["pages"] if page.get("ocr")),
         }
         for record in uploaded
     ]

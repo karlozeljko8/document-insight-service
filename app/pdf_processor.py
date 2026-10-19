@@ -5,6 +5,9 @@ import re
 import fitz
 from fastapi import HTTPException
 
+from app.config import MAX_OCR_PAGES, OCR_DPI
+from app.ocr import ocr_image, prepare_image
+
 
 def clean_cell(value) -> str:
     """Normalise a table cell to a single-line string."""
@@ -102,9 +105,21 @@ def normalise_text(text: str) -> str:
     return text.strip()
 
 
+def ocr_pdf_page(page) -> str:
+    """Render a page without a text layer to an image and read it with OCR."""
+    png = page.get_pixmap(dpi=OCR_DPI).tobytes("png")
+    return normalise_text(ocr_image(png))
+
+
 def extract_pdf_pages(pdf_bytes: bytes) -> list[dict]:
-    """Extract text from each PDF page while preserving page numbers."""
+    """
+    Extract text from each PDF page while preserving page numbers.
+
+    Pages with a text layer use PyMuPDF. Pages without one (scans) fall back to
+    OCR, for at most MAX_OCR_PAGES pages per document.
+    """
     pages = []
+    ocr_pages_done = 0
 
     try:
         with fitz.open(stream=pdf_bytes, filetype="pdf") as pdf:
@@ -113,6 +128,15 @@ def extract_pdf_pages(pdf_bytes: bytes) -> list[dict]:
 
                 body = normalise_text(body)
                 tables_text = normalise_text(tables_text)
+                used_ocr = False
+
+                if not body and not tables_text:
+                    if ocr_pages_done >= MAX_OCR_PAGES:
+                        continue
+
+                    body = ocr_pdf_page(page)
+                    ocr_pages_done += 1
+                    used_ocr = True
 
                 if body or tables_text:
                     pages.append(
@@ -120,9 +144,12 @@ def extract_pdf_pages(pdf_bytes: bytes) -> list[dict]:
                             "page": page_number,
                             "text": body,
                             "tables_text": tables_text,
+                            "ocr": used_ocr,
                         }
                     )
 
+    except HTTPException:
+        raise
     except Exception as exc:
         raise HTTPException(
             status_code=400,
@@ -132,10 +159,20 @@ def extract_pdf_pages(pdf_bytes: bytes) -> list[dict]:
     if not pages:
         raise HTTPException(
             status_code=400,
-            detail=(
-                "No selectable text was found in this PDF. "
-                "Scanned PDFs require OCR, which is not implemented yet."
-            ),
+            detail="No text was found in this PDF, not even with OCR.",
         )
 
     return pages
+
+
+def extract_image_pages(image_bytes: bytes) -> list[dict]:
+    """Read an image upload with OCR; it becomes a single-page document."""
+    text = normalise_text(ocr_image(prepare_image(image_bytes)))
+
+    if not text:
+        raise HTTPException(
+            status_code=400,
+            detail="No text could be recognised in this image.",
+        )
+
+    return [{"page": 1, "text": text, "tables_text": "", "ocr": True}]
