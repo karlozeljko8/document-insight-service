@@ -1,0 +1,13 @@
+.venv/
+.git/
+.github/
+.pytest_cache/
+**/__pycache__/
+*.py[cod]
+.vscode/
+.idea/
+tests/
+evaluation_results.json
+README.md
+Dockerfile*
+docker-compose*.yml
