@@ -1,15 +1,15 @@
 # Document Insight Service
 
-REST API (FastAPI) koji prima PDF dokumente, izvlači tekst i tablice, i odgovara na pitanja o njihovom sadržaju
+REST API (FastAPI) koji prima PDF i slike (PNG/JPG), izvlači tekst i tablice (skenove čita OCR-om), i odgovara na pitanja o njihovom sadržaju
 pomoću RAG pristupa: semantičko pretraživanje (FAISS) + model za question answering (RoBERTa SQuAD2).
 Uz API dolazi i Streamlit UI.
 
-> **Status projekta:** PDF obrada, RAG, sesije s više dokumenata i UI su gotovi.
-> Još nije napravljeno: podrška za slike/OCR, cache embeddinga. Vidi [Ograničenja i plan](#ograničenja-i-plan).
+> **Status projekta:** PDF obrada, OCR za slike i skenirane PDF-ove, RAG, sesije s više dokumenata i UI su gotovi.
+> Još nije napravljeno: cache embeddinga. Vidi [Ograničenja i plan](#ograničenja-i-plan).
 
 ## Što servis radi
 
-1. `POST /upload`: prima jedan ili više PDF-ova, izvlači tekst i tablice, dijeli ih u chunkove i gradi FAISS indeks.
+1. `POST /upload`: prima jedan ili više PDF-ova ili slika (PNG/JPG), izvlači tekst i tablice (OCR za skenove), dijeli ih u chunkove i gradi FAISS indeks.
    Dokumenti se grupiraju u **sesiju**.
 2. `POST /ask`: prima pitanje i pretražuje jedan dokument ili sve dokumente sesije, vraća odgovor, izvor
    (ime datoteke, stranica, tekst) i detalje dohvaćanja.
@@ -21,6 +21,7 @@ Uz API dolazi i Streamlit UI.
 |---|---|---|
 | API | **FastAPI** | Brz razvoj, validacija zahtjeva (Pydantic), automatska dokumentacija na `/docs`. |
 | Ekstrakcija teksta | **PyMuPDF** | Brza i točna za PDF-ove s tekstualnim slojem; ima detekciju tablica, pa se retci tablica mogu tretirati posebno. |
+| OCR | **EasyOCR** | Prepoznaje tekst na slikama i skeniranim stranicama; radi lokalno na CPU-u, bez vanjskog API-ja, a modeli se mogu ugraditi u Docker image. |
 | Embeddingi | **sentence-transformers `all-MiniLM-L6-v2`** | Mali model (brz na CPU-u) s dobrom semantičkom kvalitetom za pretragu. |
 | Vektorska pretraga | **FAISS** (`IndexFlatIP`) | Egzaktna pretraga po kosinusnoj sličnosti (normalizirani vektori); za ovu veličinu dokumenata je dovoljno brza i bez dodatne infrastrukture. |
 | QA model | **`deepset/roberta-base-squad2`** (Hugging Face Transformers) | Extractive QA: vraća dio teksta iz dokumenta, pa je odgovor provjerljiv i ne "halucinira". SQuAD2 model zna prepoznati da odgovora nema. Radi lokalno, bez API ključa. |
@@ -52,12 +53,14 @@ app/
   schemas.py        Pydantic modeli zahtjeva
   state.py          spremanje dokumenata i sesija u memoriji
   config.py         konstante (limiti, veličina chunka, top-k)
-  pdf_processor.py  ekstrakcija teksta i tablica (PyMuPDF)
+  pdf_processor.py  ekstrakcija teksta i tablica (PyMuPDF), OCR fallback za skenirane stranice
+  ocr.py            EasyOCR (lijeno učitavanje), priprema slika
+  files.py          provjera tipa datoteke (magic bytes), čišćenje imena datoteke
   chunking.py       dijeljenje u chunkove
   retrieval.py      embeddingi, FAISS, odabir retka tablice
   models.py, qa.py  lijeno učitavanje modela
 frontend/streamlit_app.py   Streamlit UI
-sample_docs/                12 testnih PDF-ova
+sample_docs/                12 testnih PDF-ova + skenirani primjeri (PNG i PDF bez tekstualnog sloja)
 tests/                      pytest testovi i skupovi pitanja za evaluaciju
 scripts/evaluate_documents.py   evaluacija kvalitete odgovora
 .github/workflows/test.yaml     CI
@@ -94,7 +97,7 @@ U drugom terminalu, dok backend radi:
 
 UI je na http://localhost:8501. URL backenda može se promijeniti u sidebaru.
 
-U UI-ju možeš odabrati više PDF-ova odjednom, postavljati pitanja nad cijelom sesijom ili jednim dokumentom,
+U UI-ju možeš odabrati više PDF-ova ili slika odjednom, postavljati pitanja nad cijelom sesijom ili jednim dokumentom,
 vidjeti izvor odgovora (datoteka i stranica) te obrisati sesiju.
 
 > **Napomena o Swagger UI-ju:** polje `files` u `/docs` prikazuje se kao `array<string>` i ne nudi odabir datoteka
@@ -126,12 +129,12 @@ Za ručnu instalaciju s testovima koristi `pip install -r requirements-dev.txt` 
 
 ## Primjeri API zahtjeva
 
-### Upload više PDF-ova
+### Upload više dokumenata (PDF i slike)
 
 ```bash
 curl -X POST http://127.0.0.1:8000/upload \
   -F "files=@sample_docs/incident_report_payment_api.pdf" \
-  -F "files=@sample_docs/sample_employee_policy.pdf"
+  -F "files=@sample_docs/sample_employee_policy.pdf" \n  -F "files=@sample_docs/scanned_invoice_nordlicht.png"
 ```
 
 Odgovor (skraćeno, vrijednosti su ilustrativne):
@@ -148,7 +151,9 @@ Odgovor (skraćeno, vrijednosti su ilustrativne):
 }
 ```
 
-Za dodavanje u postojeću sesiju pošalji i `-F "session_id=3f6c..."`. Datoteke koje se ne mogu obraditi (npr. nisu PDF)
+Odgovor za svaki dokument ima `ocr_pages` (koliko je stranica pročitano OCR-om).
+
+Za dodavanje u postojeću sesiju pošalji i `-F "session_id=3f6c..."`. Datoteke koje se ne mogu obraditi (npr. nisu PDF/PNG/JPG ili sadržaj ne odgovara ekstenziji)
 nalaze se u `errors`, a ostale se svejedno spremaju. Greška se vraća samo ako nijedna datoteka nije uspjela.
 
 Zbog kompatibilnosti odgovor još sadrži i stara polja (`document_id`, `filename`, zbrojene `pages_processed` i `chunks_created`).
@@ -193,6 +198,15 @@ curl -X DELETE http://127.0.0.1:8000/sessions/3f6c...        # brisanje sesije i
 Kodovi grešaka: 400 neispravan zahtjev (prazno pitanje, krivi tip datoteke, prazna datoteka, oba/nijedan ID),
 404 nepoznat dokument ili sesija, 413 datoteka veća od 10 MB.
 
+## Slike i OCR
+
+- Podržani formati: **PDF, PNG, JPG/JPEG**. Tip se određuje po **sadržaju** (magic bytes), ne samo po ekstenziji: datoteka `lažna.png` koja nije slika odbija se s 400.
+- **PDF:** stranice s tekstualnim slojem čita PyMuPDF (brzo, s tablicama). Stranice **bez** teksta (skenovi) renderiraju se u sliku (200 dpi) i čita ih EasyOCR.
+- **Slike:** dekodiraju se (prozirnost i CMYK se uklanjaju, velike se smanjuju na 3000 px), pa ih čita EasyOCR; slika postaje dokument s jednom stranicom.
+- **Imena datoteka** se čiste prije spremanja i prikaza (bez putanja i posebnih znakova, najviše 100 znakova), pa `../../x<y>.png` postaje `x_y_.png`.
+- EasyOCR se učitava **lijeno** (pri prvom OCR-u). Pri prvom lokalnom pokretanju skida modele (~100 MB) u `~/.EasyOCR`; u Dockeru su ugrađeni u image.
+- Skenirani primjeri su u `sample_docs/` (`scanned_invoice_nordlicht.png`, `scanned_receipt_harbor_bookshop.pdf`); tekst je u njima nacrtan kao slika (bez tekstualnog sloja), pa prolaze kroz OCR.
+
 ## Testovi i evaluacija
 
 ```powershell
@@ -207,7 +221,7 @@ Kodovi grešaka: 400 neispravan zahtjev (prazno pitanje, krivi tip datoteke, pra
 
 ## Ograničenja i plan
 
-- Podržani su samo PDF-ovi s tekstualnim slojem. **Slike i skenirani PDF-ovi (OCR) još nisu podržani**; planiran je EasyOCR.
+- **OCR** čita samo engleski (`OCR_LANGUAGES` u `app/config.py`), traje nekoliko sekundi po stranici na CPU-u i najviše `MAX_OCR_PAGES` (20) stranica po PDF-u. Kvaliteta ovisi o skenu; rukopis i vrlo loši skenovi nisu pouzdani. EasyOCR spaja redove u odlomke, pa se tablice na slikama čitaju kao običan tekst (bez strukture redaka).
 - Dokumenti i sesije žive u **memoriji** procesa: restart backenda ih briše.
 - Nema autentikacije ni ograničenja broja zahtjeva; nema strukturiranog logiranja.
 - Embeddingi se ne spremaju u cache; isti PDF uploadan dvaput gradi se dvaput.

@@ -54,7 +54,7 @@ def test_upload_rejects_non_pdf():
     )
 
     assert response.status_code == 400
-    assert response.json()["detail"] == "Only PDF files are supported."
+    assert response.json()["detail"] == "Only PDF, PNG and JPG files are supported."
 
 
 def test_upload_rejects_empty_file():
