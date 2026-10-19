@@ -3,6 +3,8 @@ import streamlit as st
 
 DEFAULT_API_URL = "http://127.0.0.1:8000"
 REQUEST_TIMEOUT = 180
+MAX_FILES = 10  # mirrors MAX_FILES_PER_UPLOAD in app/config.py
+MAX_FILE_MB = 10  # mirrors MAX_FILE_SIZE in app/config.py
 
 st.set_page_config(
     page_title="Document Insight",
@@ -362,6 +364,26 @@ with st.sidebar:
         st.session_state["check_api_now"] = True
 
     st.markdown("---")
+    st.markdown("##### SESSION")
+    sidebar_session = st.session_state.get("session_id")
+    if sidebar_session:
+        st.caption(f"Current session: `{sidebar_session[:8]}…`")
+        if st.button("Delete session", use_container_width=True):
+            deleted = api_request("DELETE", f"/sessions/{sidebar_session}", api_url)
+            if deleted is not None:
+                st.session_state.pop("session_id", None)
+                st.session_state.pop("last_answer", None)
+                st.session_state.pop("selected_document_id", None)
+                get_documents.clear()
+                st.rerun()
+    else:
+        st.caption("No active session. Uploading creates one.")
+    if st.button("Start new session", use_container_width=True):
+        st.session_state.pop("session_id", None)
+        st.session_state.pop("last_answer", None)
+        st.rerun()
+
+    st.markdown("---")
     st.markdown(
         """
         <div class="sidebar-note">
@@ -430,51 +452,78 @@ with upload_tab:
 
     upload_col, tips_col = st.columns([1.7, 1], gap="large")
     with upload_col:
-        uploaded_file = st.file_uploader(
-            "Choose a PDF file",
+        uploaded_files = st.file_uploader(
+            "Choose one or more PDF files",
             type=["pdf"],
-            accept_multiple_files=False,
-            help="PDF files only. Maximum file size: 10 MB.",
+            accept_multiple_files=True,
+            help=f"PDF files only. Up to {MAX_FILES} files, maximum {MAX_FILE_MB} MB each.",
             key="pdf_upload",
         )
-        if uploaded_file is not None:
-            size_mb = uploaded_file.size / (1024 * 1024)
-            st.caption(f"Selected file: **{uploaded_file.name}** · {size_mb:.2f} MB")
-            if size_mb > 10:
-                st.warning("This file exceeds the 10 MB upload limit.")
+        too_big = [f.name for f in uploaded_files if f.size > MAX_FILE_MB * 1024 * 1024]
+        if uploaded_files:
+            total_mb = sum(f.size for f in uploaded_files) / (1024 * 1024)
+            st.caption(f"Selected **{len(uploaded_files)}** file(s) · {total_mb:.2f} MB total")
+        if too_big:
+            st.warning(f"Over the {MAX_FILE_MB} MB limit: {', '.join(too_big)}")
+        if len(uploaded_files) > MAX_FILES:
+            st.warning(f"Select at most {MAX_FILES} files per upload.")
+
+        current_session = st.session_state.get("session_id")
+        if current_session:
+            st.caption(f"Files will be added to the current session `{current_session[:8]}…`")
+        else:
+            st.caption("A new session will be created for this upload.")
 
         upload_clicked = st.button(
-            "Upload and index PDF",
+            "Upload and index PDFs",
             type="primary",
-            disabled=uploaded_file is None or (uploaded_file.size > 10 * 1024 * 1024),
+            disabled=not uploaded_files or bool(too_big) or len(uploaded_files) > MAX_FILES,
             use_container_width=True,
         )
 
-        if upload_clicked and uploaded_file is not None:
+        if upload_clicked and uploaded_files:
             with st.spinner("Extracting content and building the search index..."):
                 result = api_request(
                     "POST",
                     "/upload",
                     api_url,
-                    files={
-                        "file": (
-                            uploaded_file.name,
-                            uploaded_file.getvalue(),
-                            "application/pdf",
-                        )
-                    },
+                    files=[
+                        ("files", (f.name, f.getvalue(), "application/pdf"))
+                        for f in uploaded_files
+                    ],
+                    data={"session_id": current_session} if current_session else None,
+                )
+
+            if result is None and current_session:
+                st.caption(
+                    "If the session no longer exists on the backend (e.g. it restarted), "
+                    "use **Start new session** in the sidebar and upload again."
                 )
 
             if result:
                 get_documents.clear()
-                st.session_state["selected_document_id"] = result.get("document_id")
+                st.session_state["session_id"] = result.get("session_id")
                 st.session_state.pop("last_answer", None)
-                st.success("Document uploaded and indexed successfully.")
-                metric_cols = st.columns(3)
-                metric_cols[0].metric("Pages processed", result.get("pages_processed", "—"))
-                metric_cols[1].metric("Chunks created", result.get("chunks_created", "—"))
-                metric_cols[2].metric("File size", f"{uploaded_file.size / (1024 * 1024):.2f} MB")
-                st.info("Your document is ready. Open **Ask a question** to get started.")
+                uploaded_docs = result.get("documents", [])
+                if uploaded_docs:
+                    st.session_state["selected_document_id"] = uploaded_docs[0]["document_id"]
+                st.success(f"{len(uploaded_docs)} document(s) uploaded and indexed.")
+                for failed in result.get("errors", []):
+                    st.warning(f"**{failed['filename']}** was skipped: {failed['detail']}")
+                if uploaded_docs:
+                    st.dataframe(
+                        [
+                            {
+                                "Document": d["filename"],
+                                "Pages": d["pages_processed"],
+                                "Chunks": d["chunks_created"],
+                            }
+                            for d in uploaded_docs
+                        ],
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+                st.info("Your documents are ready. Open **Ask a question** to get started.")
 
     with tips_col:
         st.markdown(
@@ -525,13 +574,27 @@ with ask_tab:
             0,
         )
 
+        session_id = st.session_state.get("session_id")
+        session_docs = [d for d in documents if d.get("session_id") == session_id]
+
         question_col, prompt_col = st.columns([1.5, 1], gap="large")
         with question_col:
+            ask_whole_session = False
+            if session_docs:
+                scope = st.radio(
+                    "Search in",
+                    [f"Whole session ({len(session_docs)} documents)", "Single document"],
+                    horizontal=True,
+                    key="ask_scope",
+                )
+                ask_whole_session = scope.startswith("Whole")
+
             selected_label = st.selectbox(
                 "Document",
                 labels,
                 index=default_index,
                 key="selected_document_label",
+                disabled=ask_whole_session,
             )
             question = st.text_area(
                 "Your question",
@@ -564,19 +627,25 @@ with ask_tab:
             )
 
         if ask_clicked:
-            selected_id = doc_options[selected_label]
-            with st.spinner("Searching the document and evaluating relevant passages..."):
+            if ask_whole_session:
+                scope_payload = {"session_id": session_id}
+                scope_label = f"Whole session ({len(session_docs)} documents)"
+            else:
+                scope_payload = {"document_id": doc_options[selected_label]}
+                scope_label = selected_label
+
+            with st.spinner("Searching the documents and evaluating relevant passages..."):
                 result = api_request(
                     "POST",
                     "/ask",
                     api_url,
-                    json={"document_id": selected_id, "question": question},
+                    json={**scope_payload, "question": question},
                 )
 
             if result:
                 st.session_state["last_answer"] = result
                 st.session_state["last_question"] = question
-                st.session_state["last_document_label"] = selected_label
+                st.session_state["last_document_label"] = scope_label
 
         result = st.session_state.get("last_answer")
         if result:
@@ -586,6 +655,8 @@ with ask_tab:
                 f'<div class="surface-card"><div class="answer-text">{__import__("html").escape(str(result.get("answer", "No answer returned.")))}</div></div>',
                 unsafe_allow_html=True,
             )
+
+            st.caption(f"Searched in: {st.session_state.get('last_document_label', '—')}")
 
             source = result.get("source")
             if source:
@@ -633,6 +704,7 @@ with documents_tab:
             [
                 {
                     "Document": doc.get("filename", "Untitled PDF"),
+                    "Session": (doc.get("session_id") or "—")[:8],
                     "Pages": doc.get("pages", 0),
                     "Chunks": doc.get("chunks", 0),
                     "Document ID": doc.get("document_id", "—"),
