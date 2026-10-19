@@ -405,7 +405,7 @@ with header_left:
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<div class="hero-copy">Upload a PDF, ask a question in natural language, '
+        '<div class="hero-copy">Upload PDFs or scanned images, ask a question in natural language, '
         'and explore answers with their source context.</div>',
         unsafe_allow_html=True,
     )
@@ -448,17 +448,17 @@ upload_tab, ask_tab, documents_tab = st.tabs(
 with upload_tab:
     st.markdown('<div class="section-heading">Add a new document</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="section-copy">Upload a PDF to extract its content and make it searchable.</div>',
+        '<div class="section-copy">Upload PDFs or images (PNG/JPG) to extract their text and make it searchable. Scans are read with OCR.</div>',
         unsafe_allow_html=True,
     )
 
     upload_col, tips_col = st.columns([1.7, 1], gap="large")
     with upload_col:
         uploaded_files = st.file_uploader(
-            "Choose one or more PDF files",
-            type=["pdf"],
+            "Choose one or more PDF or image files",
+            type=["pdf", "png", "jpg", "jpeg"],
             accept_multiple_files=True,
-            help=f"PDF files only. Up to {MAX_FILES} files, maximum {MAX_FILE_MB} MB each.",
+            help=f"PDF, PNG or JPG (scans are read with OCR). Up to {MAX_FILES} files, maximum {MAX_FILE_MB} MB each.",
             key="pdf_upload",
         )
         too_big = [f.name for f in uploaded_files if f.size > MAX_FILE_MB * 1024 * 1024]
@@ -477,7 +477,7 @@ with upload_tab:
             st.caption("A new session will be created for this upload.")
 
         upload_clicked = st.button(
-            "Upload and index PDFs",
+            "Upload and index documents",
             type="primary",
             disabled=not uploaded_files or bool(too_big) or len(uploaded_files) > MAX_FILES,
             use_container_width=True,
@@ -490,7 +490,7 @@ with upload_tab:
                     "/upload",
                     api_url,
                     files=[
-                        ("files", (f.name, f.getvalue(), "application/pdf"))
+                        ("files", (f.name, f.getvalue(), f.type or "application/octet-stream"))
                         for f in uploaded_files
                     ],
                     data={"session_id": current_session} if current_session else None,
@@ -519,6 +519,7 @@ with upload_tab:
                                 "Document": d["filename"],
                                 "Pages": d["pages_processed"],
                                 "Chunks": d["chunks_created"],
+                                "OCR pages": d.get("ocr_pages", 0),
                             }
                             for d in uploaded_docs
                         ],
@@ -534,14 +535,14 @@ with upload_tab:
                 <div class="eyebrow">HOW IT WORKS</div>
                 <div style="font-size:1.03rem;font-weight:700;margin-bottom:0.6rem;">From PDF to insight</div>
                 <div style="color:#9aacc9;line-height:1.7;font-size:0.9rem;">
-                    <b style="color:#eaf2ff;">01</b> &nbsp;Upload your PDF<br>
+                    <b style="color:#eaf2ff;">01</b> &nbsp;Upload a PDF or image<br>
                     <b style="color:#eaf2ff;">02</b> &nbsp;Content is extracted and indexed<br>
                     <b style="color:#eaf2ff;">03</b> &nbsp;Ask questions and review sources
                 </div>
             </div>
             <div class="surface-card">
                 <div style="font-size:0.9rem;font-weight:700;margin-bottom:0.4rem;">Supported format</div>
-                <div style="color:#9aacc9;font-size:0.86rem;">PDF · Up to 10 MB per file</div>
+                <div style="color:#9aacc9;font-size:0.86rem;">PDF, PNG, JPG (OCR for scans) · Up to 10 MB per file</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -561,7 +562,7 @@ with ask_tab:
     elif not documents:
         st.markdown(
             '<div class="surface-card"><div style="font-weight:700;margin-bottom:0.4rem;">Your workspace is empty</div>'
-            '<div style="color:#9aacc9;">Upload a PDF first. Once it is indexed, you can ask questions here.</div></div>',
+            '<div style="color:#9aacc9;">Upload a document first. Once it is indexed, you can ask questions here.</div></div>',
             unsafe_allow_html=True,
         )
     else:
