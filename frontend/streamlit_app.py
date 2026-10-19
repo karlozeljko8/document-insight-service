@@ -1,7 +1,9 @@
+import os
+
 import requests
 import streamlit as st
 
-DEFAULT_API_URL = "http://127.0.0.1:8000"
+DEFAULT_API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000")
 REQUEST_TIMEOUT = 180
 MAX_FILES = 10  # mirrors MAX_FILES_PER_UPLOAD in app/config.py
 MAX_FILE_MB = 10  # mirrors MAX_FILE_SIZE in app/config.py
