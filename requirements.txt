@@ -1,10 +1,9 @@
-fastapi[standard]
-pymupdf
+# Runtime dependencies of the backend (pinned to the versions tested locally).
+fastapi[standard]==0.143.0
+python-multipart==0.0.32
+pymupdf==1.28.2
 sentence-transformers==3.4.1
-faiss-cpu
 transformers==4.57.6
-torch
-pytest
-httpx
-streamlit
-requests
+faiss-cpu==1.15.1
+torch==2.14.1
+numpy==2.5.4
