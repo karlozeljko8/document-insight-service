@@ -241,11 +241,11 @@ Dio koda razvijao sam uz AI asistenta (Claude Code). Kod nisam prihvaćao "nasli
 
 ## Demo
 
-Snimke rada aplikacije nisu u repozitoriju zbog veličine, nego se preuzimaju preko linkova:
+Snimke rada se preuzimaju preko linka: https://we.tl/t-DPtXbkOdx6XEaK4f
 
 1. **Upload dokumenata i pitanja:** upload 5 dokumenata odjednom, zatim 3 pitanja nad sesijom. Uz svaki odgovor prikazan je izvor
-   (datoteka, stranica i tekst chunka). Link za preuzimanje: *(link)*
-2. **Upload slika (OCR):** isti tok, ali s uploadom slika koje čita EasyOCR. Link za preuzimanje: *(link)*
+   (datoteka, stranica i tekst chunka). 
+2. **Upload slika (OCR):** isti tok, ali s uploadom slika koje čita EasyOCR.
 
 ## Primjeri API zahtjeva
 
